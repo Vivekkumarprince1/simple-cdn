@@ -1,0 +1,21 @@
+[router]
+listen = "0.0.0.0:8080"
+default_region = "north"
+trust_proxy = "127.0.0.1/32"
+development_allow_client_ip_override = true
+router_token = "local-development-token"
+timeout_ms = 2000
+max_connections = 128
+worker_threads = 8
+health_interval_ms = 2000
+health_failure_threshold = 2
+health_recovery_threshold = 2
+
+[edges.north]
+url = "http://127.0.0.1:8081"
+
+[edges.west-central]
+url = "http://127.0.0.1:8082"
+
+[edges.south-east]
+url = "http://127.0.0.1:8083"

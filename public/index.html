@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Live operations console for the Simple CDN regional C++ router.">
+  <title>Edge Atlas — Regional CDN Operations</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css?v=4">
+  <script src="/app.js?v=2" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to operations console</a>
+  <div class="texture" aria-hidden="true"></div>
+
+  <header class="app-header">
+    <a class="brand" href="/" aria-label="Edge Atlas home">
+      <span class="brand-mark" aria-hidden="true">EA</span>
+      <span><strong>EDGE ATLAS</strong><small>REGIONAL DELIVERY CONTROL</small></span>
+    </a>
+    <div class="header-tools">
+      <div class="system-state" id="system-state" data-state="loading" role="status" aria-live="polite">
+        <span class="state-light" aria-hidden="true"></span>
+        <span id="system-state-label">CONNECTING</span>
+      </div>
+      <label class="refresh-control">
+        <input id="auto-refresh" type="checkbox" checked>
+        <span>AUTO REFRESH</span>
+      </label>
+      <button class="icon-button" id="refresh-button" type="button" aria-label="Refresh operational data" title="Refresh data">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="kicker"><span>SYS.01</span> C++17 DATA PLANE</p>
+        <h1 id="page-title">Route once.<br><em>Recover continuously.</em></h1>
+      </div>
+      <p class="intro-copy">One public endpoint coordinates three India edge regions. Inspect live circuits, route a request, and watch the control plane react to failure.</p>
+    </section>
+
+    <div class="alert" id="global-alert" role="alert" hidden>
+      <span aria-hidden="true">!</span>
+      <p><strong id="alert-title">Router unavailable</strong><small id="alert-detail">Operational data could not be loaded.</small></p>
+      <button type="button" id="alert-retry">Retry</button>
+    </div>
+
+    <section class="operations-grid" aria-label="Routing operations">
+      <article class="panel topology-panel" aria-labelledby="topology-title">
+        <div class="panel-heading">
+          <div><p class="panel-index">01 / NETWORK</p><h2 id="topology-title">Regional topology</h2></div>
+          <span class="timestamp" id="last-updated">AWAITING TELEMETRY</span>
+        </div>
+
+        <div class="topology-wrap">
+          <svg class="topology" viewBox="0 0 760 460" role="img" aria-labelledby="topology-svg-title topology-svg-desc">
+            <title id="topology-svg-title">India regional CDN topology</title>
+            <desc id="topology-svg-desc">A public router connected to Delhi, Mumbai, and Bengaluru edge servers.</desc>
+            <defs>
+              <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32"/></pattern>
+              <filter id="signal-glow"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <rect class="map-grid" width="760" height="460" fill="url(#grid)"/>
+            <path class="india-trace" d="M465 38l45 37 25 65 55 50-20 62 14 51-63 48-25 66-50-22-42-74-56-49 15-70-37-55 60-44 25-55z"/>
+            <g class="routes" aria-hidden="true">
+              <path id="route-north" data-route="north" d="M163 229 C260 185 352 137 455 116"/>
+              <path id="route-west-central" data-route="west-central" d="M163 229 C268 246 342 262 424 274"/>
+              <path id="route-south-east" data-route="south-east" d="M163 229 C270 302 358 355 472 385"/>
+            </g>
+            <g class="router-node">
+              <rect x="72" y="180" width="92" height="92" rx="4"/>
+              <path d="M101 208h34v34h-34zM111 218h14v14h-14z"/>
+              <text x="72" y="298">PUBLIC ROUTER</text><text class="node-meta" x="72" y="318">PORT 8080</text>
+            </g>
+            <g class="edge-node" id="node-north" data-state="loading" tabindex="0" role="group" aria-label="Delhi north edge loading">
+              <circle cx="455" cy="116" r="29"/><circle class="node-core" cx="455" cy="116" r="9"/>
+              <text x="500" y="108">DELHI</text><text class="node-meta" x="500" y="130">NORTH EDGE · 8081</text>
+            </g>
+            <g class="edge-node" id="node-west-central" data-state="loading" tabindex="0" role="group" aria-label="Mumbai west-central edge loading">
+              <circle cx="424" cy="274" r="29"/><circle class="node-core" cx="424" cy="274" r="9"/>
+              <text x="469" y="266">MUMBAI</text><text class="node-meta" x="469" y="288">WEST/CENTRAL · 8082</text>
+            </g>
+            <g class="edge-node" id="node-south-east" data-state="loading" tabindex="0" role="group" aria-label="Bengaluru south-east edge loading">
+              <circle cx="472" cy="385" r="29"/><circle class="node-core" cx="472" cy="385" r="9"/>
+              <text x="517" y="377">BENGALURU</text><text class="node-meta" x="517" y="399">SOUTH/EAST · 8083</text>
+            </g>
+          </svg>
+          <div class="map-key" aria-label="Topology legend"><span><i class="healthy"></i> Healthy</span><span><i class="failed"></i> Circuit open</span><span><i class="selected"></i> Active route</span></div>
+        </div>
+      </article>
+
+      <aside class="panel routing-panel" aria-labelledby="routing-title">
+        <div class="panel-heading"><div><p class="panel-index">02 / REQUEST</p><h2 id="routing-title">Routing workbench</h2></div></div>
+        <form id="routing-form">
+          <label for="city">Visitor location</label>
+          <div class="select-shell">
+            <select id="city" name="city">
+              <option value="Delhi">Delhi, NCR</option>
+              <option value="Mumbai">Mumbai, Maharashtra</option>
+              <option value="Bengaluru">Bengaluru, Karnataka</option>
+              <option value="Chennai">Chennai, Tamil Nadu</option>
+              <option value="Hyderabad">Hyderabad, Telangana</option>
+            </select>
+          </div>
+          <div class="button-row">
+            <button class="button primary" id="route-button" type="submit"><span>Route request</span><span aria-hidden="true">→</span></button>
+            <button class="button secondary" id="location-button" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11zM12 7.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/></svg>
+              <span>Use location</span>
+            </button>
+          </div>
+        </form>
+
+        <div class="route-result" id="route-result" data-state="idle" aria-live="polite">
+          <div class="result-top"><span id="route-badge">READY</span><span id="decision-source">NO REQUEST</span></div>
+          <p class="result-label">DELIVERED FROM</p>
+          <strong id="selected-edge">Select a location</strong>
+          <dl>
+            <div><dt>Requested region</dt><dd id="requested-region">—</dd></div>
+            <div><dt>Distance</dt><dd id="route-distance">—</dd></div>
+            <div><dt>Path state</dt><dd id="path-state">Awaiting route</dd></div>
+          </dl>
+        </div>
+        <p class="form-status" id="route-status" role="status">Choose a city or use your current location.</p>
+      </aside>
+    </section>
+
+    <section class="metrics-section" aria-labelledby="metrics-title">
+      <div class="section-heading"><div><p class="panel-index">03 / TELEMETRY</p><h2 id="metrics-title">Router pulse</h2></div><a href="/metrics" target="_blank" rel="noreferrer">Raw metrics ↗</a></div>
+      <div class="metric-grid" id="metric-grid" aria-live="polite">
+        <article class="metric"><span>REQUESTS</span><strong id="metric-requests">—</strong><small>lifetime total</small></article>
+        <article class="metric"><span>HTTP ERRORS</span><strong id="metric-errors">—</strong><small id="error-ratio">cumulative 4xx/5xx ratio</small></article>
+        <article class="metric"><span>FAILOVERS</span><strong id="metric-failovers">—</strong><small>cross-region routes</small></article>
+        <article class="metric"><span>ACTIVE</span><strong id="metric-active">—</strong><small>open connections</small></article>
+      </div>
+    </section>
+
+    <section class="fleet-section" aria-labelledby="fleet-title">
+      <div class="section-heading"><div><p class="panel-index">04 / FLEET</p><h2 id="fleet-title">Edge circuits</h2></div><span id="fleet-summary">DISCOVERING EDGES</span></div>
+      <div class="fleet-grid">
+        <article class="edge-card" id="card-north" data-state="loading">
+          <div class="edge-card-head"><span class="edge-number">01</span><span class="edge-status">CHECKING</span></div>
+          <h3>Delhi</h3><p>North India</p>
+          <dl><div><dt>Region key</dt><dd>north</dd></div><div><dt>Port</dt><dd>8081</dd></div></dl>
+          <button type="button" data-route-region="north">Test route <span>→</span></button>
+        </article>
+        <article class="edge-card" id="card-west-central" data-state="loading">
+          <div class="edge-card-head"><span class="edge-number">02</span><span class="edge-status">CHECKING</span></div>
+          <h3>Mumbai</h3><p>West &amp; Central India</p>
+          <dl><div><dt>Region key</dt><dd>west-central</dd></div><div><dt>Port</dt><dd>8082</dd></div></dl>
+          <button type="button" data-route-region="west-central">Test route <span>→</span></button>
+        </article>
+        <article class="edge-card" id="card-south-east" data-state="loading">
+          <div class="edge-card-head"><span class="edge-number">03</span><span class="edge-status">CHECKING</span></div>
+          <h3>Bengaluru</h3><p>South &amp; East India</p>
+          <dl><div><dt>Region key</dt><dd>south-east</dd></div><div><dt>Port</dt><dd>8083</dd></div></dl>
+          <button type="button" data-route-region="south-east">Test route <span>→</span></button>
+        </article>
+      </div>
+    </section>
+
+    <section class="activity-section" aria-labelledby="activity-title">
+      <div class="section-heading"><div><p class="panel-index">05 / SESSION</p><h2 id="activity-title">Operator activity</h2></div><button type="button" id="clear-activity">Clear log</button></div>
+      <ol class="activity-log" id="activity-log" aria-live="polite">
+        <li class="empty-activity"><span>—</span><p>No routing actions in this browser session.</p></li>
+      </ol>
+    </section>
+  </main>
+
+  <footer><span>EDGE ATLAS / SIMPLE CDN</span><span>C++17 · HTTP/1.1 · INDIA REGIONAL ROUTER</span><a href="/metrics" target="_blank">METRICS ↗</a></footer>
+</body>
+</html>

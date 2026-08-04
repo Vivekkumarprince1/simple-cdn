@@ -1,0 +1,4 @@
+/simple-cdn
+*.log
+*.pid
+.DS_Store
